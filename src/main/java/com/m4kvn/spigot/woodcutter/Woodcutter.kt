@@ -16,6 +16,7 @@ class Woodcutter : JavaPlugin() {
             fun onBlockBreak(event: BlockBreakEvent) {
                 if (event.isCancelled) return
                 Bukkit.broadcastMessage("event=${event.block.blockData.asString}")
+                Bukkit.broadcastMessage("itemInMainHand.data=${event.player.inventory.itemInMainHand.data}")
             }
         }, this)
     }
