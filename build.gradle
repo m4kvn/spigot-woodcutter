@@ -23,9 +23,18 @@ repositories {
     }
 }
 
+configurations {
+    embed
+    implementation.extendsFrom(embed)
+}
+
 dependencies {
     compileOnly 'org.spigotmc:spigot-api:1.16.5-R0.1-SNAPSHOT'
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+    embed "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+}
+
+jar {
+    from configurations.embed.collect { it.isDirectory() ? it : zipTree(it) }
 }
 
 processResources {
