@@ -1,31 +1,35 @@
 package com.m4kvn.spigot.woodcutter
 
+import com.m4kvn.spigot.woodcutter.nms.NmsV001016005
 import org.bukkit.Material
-import org.bukkit.Sound
-import org.bukkit.Statistic
 import org.bukkit.block.Block
-import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.inventory.ItemStack
-import org.bukkit.inventory.meta.Damageable
-import org.bukkit.inventory.meta.ItemMeta
+import org.bukkit.metadata.FixedMetadataValue
 import org.bukkit.plugin.java.JavaPlugin
-import kotlin.random.Random
 
 class Woodcutter : JavaPlugin(), Listener {
+    private val nms by lazy {
+        when (server.bukkitVersion) {
+            "1.16.5-R0.1-SNAPSHOT" -> NmsV001016005()
+            else -> throw Exception()
+        }
+    }
 
     @EventHandler(priority = EventPriority.MONITOR)
-    fun onBlockBreak(event: BlockBreakEvent) {
-        if (event.isCancelled) return
-        if (!event.block.isLog) return
-        if (!event.player.inventory.itemInMainHand.isAxe) return
-        if (event.player.isSneaking) return
+    fun onLogBreak(event: BlockBreakEvent) {
+        when {
+            event.isCancelled -> return
+            !event.block.isLog -> return
+            event.player.isSneaking -> return
+            !event.player.inventory.itemInMainHand.isAxe -> return
+            event.block.hasMetadata(event.player.metadataKey) -> return
+        }
 
-        val itemInMainHand = event.player.inventory.itemInMainHand
         val unCheckedBlocks = mutableSetOf(event.block)
         val checkedBlocks = mutableSetOf<Block>()
 
@@ -39,17 +43,13 @@ class Woodcutter : JavaPlugin(), Listener {
             unCheckedBlocks.addAll(relativeBlocks)
         }
 
-        checkedBlocks.forEach {
-            it.breakNaturally(itemInMainHand)
+        checkedBlocks.forEach { block ->
+            val key = event.player.metadataKey
+            val metadataValue = FixedMetadataValue(this, event.block)
+            block.setMetadata(key, metadataValue)
+            nms.callBlockBreakEvent(event.player, block)
+            block.removeMetadata(key, this)
         }
-
-        val isBroken = itemInMainHand.damage(checkedBlocks.size)
-        if (isBroken) {
-            event.player.breakItemInMainHand()
-        }
-
-        event.player.incrementStatistic(Statistic.MINE_BLOCK, event.block.type, checkedBlocks.size)
-        event.player.incrementStatistic(Statistic.USE_ITEM, itemInMainHand.type, checkedBlocks.size)
     }
 
     override fun onEnable() {
@@ -58,30 +58,8 @@ class Woodcutter : JavaPlugin(), Listener {
 
     override fun onDisable() {}
 
-    private fun Player.breakItemInMainHand() {
-        world.playSound(location, Sound.ENTITY_ITEM_BREAK, 1f, 1f)
-        inventory.setItemInMainHand(ItemStack(Material.AIR))
-    }
-
-    private fun ItemStack.calcDamage(amount: Int): Int {
-        var damage = amount
-        if (containsEnchantment(Enchantment.DURABILITY)) {
-            val level = getEnchantmentLevel(Enchantment.DURABILITY)
-            repeat(amount) {
-                damage -= if (Random.nextInt(level) == 0) 0 else 1
-            }
-        }
-        return damage
-    }
-
-    private fun ItemStack.damage(amount: Int): Boolean {
-        val damageable = itemMeta as? Damageable ?: return false
-        if ((damageable as ItemMeta).isUnbreakable) return false
-        val damage = calcDamage(amount)
-        damageable.damage = damageable.damage + damage
-        itemMeta = damageable
-        return damageable.damage >= type.maxDurability
-    }
+    private val Player.metadataKey: String
+        get() = "${this@Woodcutter.name}_${name}"
 
     private fun Block.isSameLog(block: Block): Boolean =
         block.blockData.material == blockData.material
