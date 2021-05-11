@@ -47,7 +47,7 @@ class Woodcutter : JavaPlugin(), Listener {
                 val metadataDropValue = FixedMetadataValue(this, null)
                 block.setMetadata(event.player.metadataKeyDrop, metadataDropValue)
             }
-            nms.breakBlockByPlayer(event.player, block)
+            nms.breakLogs(event.player, block)
             block.removeMetadata(metadataKey, this)
         }
 
@@ -64,7 +64,7 @@ class Woodcutter : JavaPlugin(), Listener {
             event.items.clear()
             event.block.removeMetadata(metadataKey, this)
             items.forEach { item ->
-                event.player.dropItem(item.itemStack)
+                nms.dropItemsOnPlayerLocation(event.player, item.itemStack)
             }
         }
     }
@@ -80,10 +80,6 @@ class Woodcutter : JavaPlugin(), Listener {
 
     private val Player.metadataKeyDrop: String
         get() = "${this@Woodcutter.name}_${name}_drop"
-
-    private fun Player.dropItem(itemStack: ItemStack) {
-        world.dropItem(location, itemStack)
-    }
 
     private val Block.isLog: Boolean
         get() = when (blockData.material) {
