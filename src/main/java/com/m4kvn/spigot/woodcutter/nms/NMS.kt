@@ -4,5 +4,6 @@ import org.bukkit.block.Block
 import org.bukkit.entity.Player
 
 interface NMS {
-    fun callBlockBreakEvent(player: Player, block: Block)
+    fun breakBlockByPlayer(player: Player, block: Block)
+    fun breakLeaves(player: Player, block: Block)
 }

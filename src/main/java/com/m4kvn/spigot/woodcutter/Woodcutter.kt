@@ -1,5 +1,6 @@
 package com.m4kvn.spigot.woodcutter
 
+import com.m4kvn.spigot.woodcutter.nms.NMS
 import com.m4kvn.spigot.woodcutter.nms.NmsV001016005
 import org.bukkit.Material
 import org.bukkit.block.Block
@@ -14,7 +15,7 @@ import org.bukkit.metadata.FixedMetadataValue
 import org.bukkit.plugin.java.JavaPlugin
 
 class Woodcutter : JavaPlugin(), Listener {
-    private val nms by lazy {
+    private val nms: NMS by lazy {
         when (server.bukkitVersion) {
             "1.16.5-R0.1-SNAPSHOT" -> NmsV001016005()
             else -> throw Exception()
@@ -37,29 +38,21 @@ class Woodcutter : JavaPlugin(), Listener {
             return
         }
 
-        val tree = Tree(event.block)
-        val unCheckedBlocks = mutableSetOf(event.block)
-        val checkedBlocks = mutableSetOf<Block>()
+        val tree = event.block.asTree ?: return
 
-        while (unCheckedBlocks.isNotEmpty()) {
-            val checkingBlock = unCheckedBlocks.first()
-            unCheckedBlocks.remove(checkingBlock)
-            checkedBlocks.add(checkingBlock)
-            val relativeBlocks = checkingBlock.getRelativeBlocks(1)
-                .filter { it.isSameLog(checkingBlock) }
-                .filterNot { checkedBlocks.contains(it) }
-            unCheckedBlocks.addAll(relativeBlocks)
-        }
-
-        checkedBlocks.forEach { block ->
+        tree.logBlocks.forEach { block ->
             val metadataValue = FixedMetadataValue(this, tree)
             block.setMetadata(metadataKey, metadataValue)
             if (block.drops.isNotEmpty()) {
                 val metadataDropValue = FixedMetadataValue(this, null)
                 block.setMetadata(event.player.metadataKeyDrop, metadataDropValue)
             }
-            nms.callBlockBreakEvent(event.player, block)
+            nms.breakBlockByPlayer(event.player, block)
             block.removeMetadata(metadataKey, this)
+        }
+
+        tree.leaves.forEach { leaves ->
+            nms.breakLeaves(event.player, leaves)
         }
     }
 
@@ -92,20 +85,6 @@ class Woodcutter : JavaPlugin(), Listener {
         world.dropItem(location, itemStack)
     }
 
-    private fun Block.isSameLog(block: Block): Boolean =
-        block.blockData.material == blockData.material
-
-    private fun Block.getRelativeBlocks(distance: Int): List<Block> {
-        val blocks = mutableListOf<Block>()
-        val range = -distance..distance
-        for (x in range) for (y in range) for (z in range) {
-            if (x != 0 || y != 0 || z != 0) {
-                blocks.add(getRelative(x, y, z))
-            }
-        }
-        return blocks
-    }
-
     private val Block.isLog: Boolean
         get() = when (blockData.material) {
             Material.WARPED_STEM,
@@ -128,5 +107,18 @@ class Woodcutter : JavaPlugin(), Listener {
             Material.STONE_AXE,
             Material.WOODEN_AXE -> true
             else -> false
+        }
+
+    private val Block.asTree: Tree?
+        get() = when (blockData.material) {
+            Material.SPRUCE_LOG -> SpruceTree(this)
+            Material.OAK_LOG -> OakTree(this)
+            Material.JUNGLE_LOG -> JungleTree(this)
+            Material.DARK_OAK_LOG -> DarkOakTree(this)
+            Material.BIRCH_LOG -> BirchTree(this)
+            Material.ACACIA_LOG -> AcaciaTree(this)
+            Material.CRIMSON_STEM -> CrimsonStemTree(this)
+            Material.WARPED_STEM -> WarpedStemTree(this)
+            else -> null
         }
 }
