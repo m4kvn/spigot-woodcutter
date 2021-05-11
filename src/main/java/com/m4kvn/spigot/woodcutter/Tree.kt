@@ -26,14 +26,6 @@ sealed class Tree {
     }
 
     val leaves: List<Block> by lazy {
-//        val checkedBlocks = mutableSetOf<Block>()
-//        logBlocks.forEach { log ->
-//            val relativeLeaves = log.getRelativeBlocks(3)
-//                .filter { leavesMaterials.contains(it.type) }
-//                .filterNot { checkedBlocks.contains(it) }
-//            checkedBlocks.addAll(relativeLeaves)
-//        }
-//        checkedBlocks
         logBlocks
             .flatMap { it.getRelativeBlocks(3) }
             .filter { leavesMaterials.contains(it.type) }
@@ -53,52 +45,52 @@ sealed class Tree {
 
     private fun Block.isSameLog(block: Block): Boolean =
         block.blockData.material == blockData.material
+
+    data class WarpedStemTree(
+        override val firstBrokenLog: Block,
+        override val logMaterial: Material = Material.WARPED_STEM,
+        override val leavesMaterials: Set<Material> = setOf(),
+    ) : Tree()
+
+    data class CrimsonStemTree(
+        override val firstBrokenLog: Block,
+        override val logMaterial: Material = Material.CRIMSON_STEM,
+        override val leavesMaterials: Set<Material> = setOf(),
+    ) : Tree()
+
+    data class AcaciaTree(
+        override val firstBrokenLog: Block,
+        override val logMaterial: Material = Material.DARK_OAK_LOG,
+        override val leavesMaterials: Set<Material> = setOf(Material.ACACIA_LEAVES),
+    ) : Tree()
+
+    data class BirchTree(
+        override val firstBrokenLog: Block,
+        override val logMaterial: Material = Material.BIRCH_LOG,
+        override val leavesMaterials: Set<Material> = setOf(Material.BIRCH_LEAVES),
+    ) : Tree()
+
+    data class DarkOakTree(
+        override val firstBrokenLog: Block,
+        override val logMaterial: Material = Material.DARK_OAK_LOG,
+        override val leavesMaterials: Set<Material> = setOf(Material.DARK_OAK_LEAVES),
+    ) : Tree()
+
+    data class JungleTree(
+        override val firstBrokenLog: Block,
+        override val logMaterial: Material = Material.JUNGLE_LOG,
+        override val leavesMaterials: Set<Material> = setOf(Material.JUNGLE_LEAVES),
+    ) : Tree()
+
+    data class OakTree(
+        override val firstBrokenLog: Block,
+        override val logMaterial: Material = Material.OAK_LOG,
+        override val leavesMaterials: Set<Material> = setOf(Material.OAK_LEAVES),
+    ) : Tree()
+
+    data class SpruceTree(
+        override val firstBrokenLog: Block,
+        override val logMaterial: Material = Material.SPRUCE_LOG,
+        override val leavesMaterials: Set<Material> = setOf(Material.SPRUCE_LEAVES),
+    ) : Tree()
 }
-
-data class WarpedStemTree(
-    override val firstBrokenLog: Block,
-    override val logMaterial: Material = Material.WARPED_STEM,
-    override val leavesMaterials: Set<Material> = setOf(),
-) : Tree()
-
-data class CrimsonStemTree(
-    override val firstBrokenLog: Block,
-    override val logMaterial: Material = Material.CRIMSON_STEM,
-    override val leavesMaterials: Set<Material> = setOf(),
-) : Tree()
-
-data class AcaciaTree(
-    override val firstBrokenLog: Block,
-    override val logMaterial: Material = Material.DARK_OAK_LOG,
-    override val leavesMaterials: Set<Material> = setOf(Material.ACACIA_LEAVES),
-) : Tree()
-
-data class BirchTree(
-    override val firstBrokenLog: Block,
-    override val logMaterial: Material = Material.BIRCH_LOG,
-    override val leavesMaterials: Set<Material> = setOf(Material.BIRCH_LEAVES),
-) : Tree()
-
-data class DarkOakTree(
-    override val firstBrokenLog: Block,
-    override val logMaterial: Material = Material.DARK_OAK_LOG,
-    override val leavesMaterials: Set<Material> = setOf(Material.DARK_OAK_LEAVES),
-) : Tree()
-
-data class JungleTree(
-    override val firstBrokenLog: Block,
-    override val logMaterial: Material = Material.JUNGLE_LOG,
-    override val leavesMaterials: Set<Material> = setOf(Material.JUNGLE_LEAVES),
-) : Tree()
-
-data class OakTree(
-    override val firstBrokenLog: Block,
-    override val logMaterial: Material = Material.OAK_LOG,
-    override val leavesMaterials: Set<Material> = setOf(Material.OAK_LEAVES),
-) : Tree()
-
-data class SpruceTree(
-    override val firstBrokenLog: Block,
-    override val logMaterial: Material = Material.SPRUCE_LOG,
-    override val leavesMaterials: Set<Material> = setOf(Material.SPRUCE_LEAVES),
-) : Tree()

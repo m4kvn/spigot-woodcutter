@@ -107,14 +107,14 @@ class Woodcutter : JavaPlugin(), Listener {
 
     private val Block.asTree: Tree?
         get() = when (blockData.material) {
-            Material.SPRUCE_LOG -> SpruceTree(this)
-            Material.OAK_LOG -> OakTree(this)
-            Material.JUNGLE_LOG -> JungleTree(this)
-            Material.DARK_OAK_LOG -> DarkOakTree(this)
-            Material.BIRCH_LOG -> BirchTree(this)
-            Material.ACACIA_LOG -> AcaciaTree(this)
-            Material.CRIMSON_STEM -> CrimsonStemTree(this)
-            Material.WARPED_STEM -> WarpedStemTree(this)
+            Material.SPRUCE_LOG -> Tree.SpruceTree(this)
+            Material.OAK_LOG -> Tree.OakTree(this)
+            Material.JUNGLE_LOG -> Tree.JungleTree(this)
+            Material.DARK_OAK_LOG -> Tree.DarkOakTree(this)
+            Material.BIRCH_LOG -> Tree.BirchTree(this)
+            Material.ACACIA_LOG -> Tree.AcaciaTree(this)
+            Material.CRIMSON_STEM -> Tree.CrimsonStemTree(this)
+            Material.WARPED_STEM -> Tree.WarpedStemTree(this)
             else -> null
         }
 }
