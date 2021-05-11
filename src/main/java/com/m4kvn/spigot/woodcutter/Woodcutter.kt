@@ -45,7 +45,7 @@ class Woodcutter : JavaPlugin(), Listener {
             val checkingBlock = unCheckedBlocks.first()
             unCheckedBlocks.remove(checkingBlock)
             checkedBlocks.add(checkingBlock)
-            val relativeBlocks = checkingBlock.getRelativeBlocks()
+            val relativeBlocks = checkingBlock.getRelativeBlocks(1)
                 .filter { it.isSameLog(checkingBlock) }
                 .filterNot { checkedBlocks.contains(it) }
             unCheckedBlocks.addAll(relativeBlocks)
@@ -95,9 +95,9 @@ class Woodcutter : JavaPlugin(), Listener {
     private fun Block.isSameLog(block: Block): Boolean =
         block.blockData.material == blockData.material
 
-    private fun Block.getRelativeBlocks(): List<Block> {
+    private fun Block.getRelativeBlocks(distance: Int): List<Block> {
         val blocks = mutableListOf<Block>()
-        val range = -1..1
+        val range = -distance..distance
         for (x in range) for (y in range) for (z in range) {
             if (x != 0 || y != 0 || z != 0) {
                 blocks.add(getRelative(x, y, z))
