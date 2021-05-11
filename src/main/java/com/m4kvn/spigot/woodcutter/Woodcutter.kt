@@ -8,6 +8,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockBreakEvent
+import org.bukkit.event.block.BlockDropItemEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.metadata.FixedMetadataValue
 import org.bukkit.plugin.java.JavaPlugin
@@ -27,9 +28,16 @@ class Woodcutter : JavaPlugin(), Listener {
             !event.block.isLog -> return
             event.player.isSneaking -> return
             !event.player.inventory.itemInMainHand.isAxe -> return
-            event.block.hasMetadata(event.player.metadataKey) -> return
         }
 
+        val metadataKey = event.player.metadataKey
+        if (event.block.hasMetadata(metadataKey)) {
+            val tree = event.block.getMetadata(metadataKey).first().value() as Tree
+            tree.brokenBlocks.add(event.block)
+            return
+        }
+
+        val tree = Tree(event.block)
         val unCheckedBlocks = mutableSetOf(event.block)
         val checkedBlocks = mutableSetOf<Block>()
 
@@ -44,11 +52,27 @@ class Woodcutter : JavaPlugin(), Listener {
         }
 
         checkedBlocks.forEach { block ->
-            val key = event.player.metadataKey
-            val metadataValue = FixedMetadataValue(this, event.block)
-            block.setMetadata(key, metadataValue)
+            val metadataValue = FixedMetadataValue(this, tree)
+            block.setMetadata(metadataKey, metadataValue)
+            if (block.drops.isNotEmpty()) {
+                val metadataDropValue = FixedMetadataValue(this, null)
+                block.setMetadata(event.player.metadataKeyDrop, metadataDropValue)
+            }
             nms.callBlockBreakEvent(event.player, block)
-            block.removeMetadata(key, this)
+            block.removeMetadata(metadataKey, this)
+        }
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    fun onBlockDropItem(event: BlockDropItemEvent) {
+        val metadataKey = event.player.metadataKeyDrop
+        if (event.block.hasMetadata(metadataKey)) {
+            val items = event.items.toMutableList()
+            event.items.clear()
+            event.block.removeMetadata(metadataKey, this)
+            items.forEach { item ->
+                event.player.dropItem(item.itemStack)
+            }
         }
     }
 
@@ -60,6 +84,13 @@ class Woodcutter : JavaPlugin(), Listener {
 
     private val Player.metadataKey: String
         get() = "${this@Woodcutter.name}_${name}"
+
+    private val Player.metadataKeyDrop: String
+        get() = "${this@Woodcutter.name}_${name}_drop"
+
+    private fun Player.dropItem(itemStack: ItemStack) {
+        world.dropItem(location, itemStack)
+    }
 
     private fun Block.isSameLog(block: Block): Boolean =
         block.blockData.material == blockData.material

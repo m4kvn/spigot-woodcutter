@@ -38,6 +38,11 @@ jar {
     from configurations.embed.collect { it.isDirectory() ? it : zipTree(it) }
 }
 
+task copyJarToServer(type: Copy) {
+    from jar
+    into "server/plugins"
+}
+
 processResources {
     from(sourceSets.main.resources.srcDirs) {
         filter ReplaceTokens, tokens: [version: version]
@@ -55,3 +60,5 @@ compileTestKotlin {
         jvmTarget = "1.8"
     }
 }
+
+build.dependsOn copyJarToServer
