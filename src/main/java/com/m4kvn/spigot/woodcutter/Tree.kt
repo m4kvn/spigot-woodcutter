@@ -58,7 +58,10 @@ sealed class Tree {
     data class CrimsonStemTree(
         override val firstBrokenLog: Block,
         override val logMaterial: Material = Material.CRIMSON_STEM,
-        override val leavesMaterials: Set<Material> = setOf(),
+        override val leavesMaterials: Set<Material> = setOf(
+            Material.NETHER_WART_BLOCK,
+            Material.SHROOMLIGHT,
+        ),
     ) : Tree()
 
     data class AcaciaTree(
