@@ -49,7 +49,10 @@ sealed class Tree {
     data class WarpedStemTree(
         override val firstBrokenLog: Block,
         override val logMaterial: Material = Material.WARPED_STEM,
-        override val leavesMaterials: Set<Material> = setOf(),
+        override val leavesMaterials: Set<Material> = setOf(
+            Material.WARPED_WART_BLOCK,
+            Material.SHROOMLIGHT,
+        ),
     ) : Tree()
 
     data class CrimsonStemTree(
