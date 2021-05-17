@@ -11,8 +11,26 @@ YouTube (https://youtu.be/uxSWNwvl6MA)
 - Drop the items to the player's position
 - Do not run during sneak
 
+## Default Logs
+- SPRUCE_LOG
+- OAK_LOG
+- JUNGLE_LOG
+- DARK_OAK_LOG
+- BIRCH_LOG
+- ACACIA_LOG
+- CRIMSON_STEM
+- WARPED_STEM
+
+## Default Axes
+- DIAMOND_AXE
+- GOLDEN_AXE
+- IRON_AXE
+- NETHERITE_AXE
+- STONE_AXE
+- WOODEN_AXE
+
 ## Spigot Versions
 - Spigot-1.16.5
 
 ## Download
-Download from [here](https://github.com/m4kvn/spigot-woodcutter/releases)
+Download from [Releases](https://github.com/m4kvn/spigot-woodcutter/releases).
