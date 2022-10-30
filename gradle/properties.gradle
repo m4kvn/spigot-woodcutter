@@ -21,5 +21,8 @@ ext {
             log4j: 'org.apache.logging.log4j:log4j-core:2.19.0',
             snakeyaml: 'org.yaml:snakeyaml:1.33',
             kotlin: "org.jetbrains.kotlin:kotlin-stdlib-jdk8",
+            m4kvn: [
+                    spigot_nms: "com.github.m4kvn:spigot-nms:1.2.0-${versions.spigot}",
+            ]
     ]
 }
