@@ -7,7 +7,7 @@ plugins {
 apply from: 'gradle/properties.gradle'
 
 group = info.group
-version = "${info.version}-${versions.spigot}"
+version = "${info.version}-${version_spigot}"
 
 sourceCompatibility = 18
 targetCompatibility = 18
@@ -43,7 +43,10 @@ dependencies {
 processResources {
     duplicatesStrategy = DuplicatesStrategy.INCLUDE
     from(sourceSets.main.resources.srcDirs) {
-        filter ReplaceTokens, tokens: [version: version]
+        filter ReplaceTokens, tokens: [
+                'version': version.toString(),
+                'api-version': version_spigot_api.toString(),
+        ]
     }
 }
 
