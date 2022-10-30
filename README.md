@@ -1,10 +1,12 @@
 # spigot-woodcutter
+
 This is Minecraft Spigot Plugin for cutting trees simply.
 
 ![](https://github.com/m4kvn/spigot-woodcutter/blob/master/gifs/woodcutter.gif?raw=true)<br>
 YouTube (https://youtu.be/uxSWNwvl6MA)
 
 ## Features
+
 - Reduces the durability of the axe
 - Change Player statistics
 - Compatible with durability enchantments
@@ -12,6 +14,7 @@ YouTube (https://youtu.be/uxSWNwvl6MA)
 - Do not run during sneak
 
 ## Default Logs
+
 - SPRUCE_LOG
 - OAK_LOG
 - JUNGLE_LOG
@@ -22,6 +25,7 @@ YouTube (https://youtu.be/uxSWNwvl6MA)
 - WARPED_STEM
 
 ## Default Axes
+
 - DIAMOND_AXE
 - GOLDEN_AXE
 - IRON_AXE
@@ -30,7 +34,12 @@ YouTube (https://youtu.be/uxSWNwvl6MA)
 - WOODEN_AXE
 
 ## Spigot Versions
-- Spigot-1.16.5
+
+| spigot | woodcutter |
+| :-- | :-- |
+| 1.16.* | [0.0.1](https://github.com/m4kvn/spigot-woodcutter/releases/tag/0.0.1) |
+| 1.19.* | [0.1.5](https://github.com/m4kvn/spigot-woodcutter/releases/tag/0.1.5) |
 
 ## Download
+
 Download from [Releases](https://github.com/m4kvn/spigot-woodcutter/releases).
