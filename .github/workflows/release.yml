@@ -48,4 +48,5 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+          generateReleaseNotes: true
           artifacts: ./server/plugins/*.jar
