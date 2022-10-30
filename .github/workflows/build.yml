@@ -3,7 +3,7 @@ on: push
 env:
   SPIGOT_VERSION: 1.19
 jobs:
-  release:
+  build:
     runs-on: ubuntu-latest
     permissions:
       contents: read
