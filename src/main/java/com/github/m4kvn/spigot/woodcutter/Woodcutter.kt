@@ -2,6 +2,7 @@ package com.github.m4kvn.spigot.woodcutter
 
 import com.github.m4kvn.spigotnms.Nms
 import com.github.m4kvn.spigotnms.nms
+import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.block.Block
 import org.bukkit.entity.Player
@@ -17,6 +18,7 @@ import org.bukkit.plugin.java.JavaPlugin
 @Suppress("Unused")
 class Woodcutter : JavaPlugin(), Listener {
     private val nms: Nms by nms()
+    private val messenger by Messenger.instance(this, ChatColor.GREEN)
 
     @EventHandler(priority = EventPriority.MONITOR)
     fun onLogBreak(event: BlockBreakEvent) {
@@ -66,10 +68,13 @@ class Woodcutter : JavaPlugin(), Listener {
     }
 
     override fun onEnable() {
+        messenger.log("onEnable")
         server.pluginManager.registerEvents(this, this)
     }
 
-    override fun onDisable() {}
+    override fun onDisable() {
+        messenger.log("onDisable")
+    }
 
     private val Player.metadataKey: String
         get() = "${this@Woodcutter.name}_${name}"
@@ -78,7 +83,7 @@ class Woodcutter : JavaPlugin(), Listener {
         get() = "${this@Woodcutter.name}_${name}_drop"
 
     private val Block.isLog: Boolean
-        get() = when (blockData.material) {
+        get() = when (type) {
             Material.WARPED_STEM,
             Material.CRIMSON_STEM,
             Material.ACACIA_LOG,
@@ -102,7 +107,7 @@ class Woodcutter : JavaPlugin(), Listener {
         }
 
     private val Block.asTree: Tree?
-        get() = when (blockData.material) {
+        get() = when (type) {
             Material.SPRUCE_LOG -> Tree.SpruceTree(this)
             Material.OAK_LOG -> Tree.OakTree(this)
             Material.JUNGLE_LOG -> Tree.JungleTree(this)
