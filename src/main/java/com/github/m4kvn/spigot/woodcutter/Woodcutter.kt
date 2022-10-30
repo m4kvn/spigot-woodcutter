@@ -1,7 +1,7 @@
-package com.m4kvn.spigot.woodcutter
+package com.github.m4kvn.spigot.woodcutter
 
-import com.m4kvn.spigot.woodcutter.nms.NMS
-import com.m4kvn.spigot.woodcutter.nms.NmsV001016005
+import com.github.m4kvn.spigotnms.Nms
+import com.github.m4kvn.spigotnms.nms
 import org.bukkit.Material
 import org.bukkit.block.Block
 import org.bukkit.entity.Player
@@ -14,13 +14,9 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.metadata.FixedMetadataValue
 import org.bukkit.plugin.java.JavaPlugin
 
+@Suppress("Unused")
 class Woodcutter : JavaPlugin(), Listener {
-    private val nms: NMS by lazy {
-        when (server.bukkitVersion) {
-            "1.16.5-R0.1-SNAPSHOT" -> NmsV001016005()
-            else -> throw Exception()
-        }
-    }
+    private val nms: Nms by nms()
 
     @EventHandler(priority = EventPriority.MONITOR)
     fun onLogBreak(event: BlockBreakEvent) {
@@ -47,7 +43,7 @@ class Woodcutter : JavaPlugin(), Listener {
                 val metadataDropValue = FixedMetadataValue(this, null)
                 block.setMetadata(event.player.metadataKeyDrop, metadataDropValue)
             }
-            nms.breakLogs(event.player, block)
+            nms.breakBlock(event.player, block)
             block.removeMetadata(metadataKey, this)
         }
 
@@ -64,7 +60,7 @@ class Woodcutter : JavaPlugin(), Listener {
             event.items.clear()
             event.block.removeMetadata(metadataKey, this)
             items.forEach { item ->
-                nms.dropItemsOnPlayerLocation(event.player, item.itemStack)
+                nms.dropItemStack(event.player, item.itemStack)
             }
         }
     }
