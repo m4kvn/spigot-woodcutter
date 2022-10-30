@@ -43,3 +43,7 @@ YouTube (https://youtu.be/uxSWNwvl6MA)
 ## Download
 
 Download from [Releases](https://github.com/m4kvn/spigot-woodcutter/releases).
+
+## Forums
+
+- [Woodcutter for Spigot - Bukkit Plugins - Minecraft - CurseForge](https://www.curseforge.com/minecraft/bukkit-plugins/woodcutter-for-spigot)
