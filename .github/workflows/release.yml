@@ -44,10 +44,8 @@ jobs:
         run: ./gradlew build
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Create Release
-        uses: marvinpinto/action-automatic-releases@v1.2.1
+      - name: Create Releases
+        uses: ncipollo/release-action@v1
         with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          prerelease: false
-          files: |
-            ./build/libs/*.jar
+          token: ${{ secrets.GITHUB_TOKEN }}
+          artifacts: ./build/libs/*.jar
