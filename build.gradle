@@ -2,17 +2,26 @@ import org.apache.tools.ant.filters.ReplaceTokens
 
 plugins {
     id 'java'
-    id 'org.jetbrains.kotlin.jvm' version '1.5.0'
+    id 'org.jetbrains.kotlin.jvm' version '1.7.0'
 }
+apply from: 'gradle/properties.gradle'
 
-group = 'com.m4kvn.spigot'
-version = '0.0.1'
+group = info.group
+version = "${info.version}-${version_spigot}"
 
-sourceCompatibility = '1.8'
-targetCompatibility = '1.8'
+sourceCompatibility = 18
+targetCompatibility = 18
 
 repositories {
+    mavenLocal()
     mavenCentral()
+    maven {
+        url = uri('https://maven.pkg.github.com/m4kvn/spigot-nms')
+        credentials {
+            username = github.username
+            password = github.password
+        }
+    }
     maven {
         name = 'spigotmc-repo'
         url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
@@ -23,30 +32,32 @@ repositories {
     }
 }
 
-configurations {
-    embed
-    implementation.extendsFrom(embed)
+dependencies {
+    compileOnly deps.spigot
+    compileOnly deps.log4j
+    compileOnly deps.snakeyaml
+    implementation deps.kotlin
+    implementation deps.m4kvn.spigot_nms
 }
 
-dependencies {
-    compileOnly 'org.spigotmc:spigot-api:1.16.5-R0.1-SNAPSHOT'
-    embed "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
-    compileOnly fileTree(dir: 'libs', include: ['*.jar'])
+processResources {
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
+    from(sourceSets.main.resources.srcDirs) {
+        filter ReplaceTokens, tokens: [
+                'version': version.toString(),
+                'api-version': version_spigot_api.toString(),
+        ]
+    }
 }
 
 jar {
-    from configurations.embed.collect { it.isDirectory() ? it : zipTree(it) }
+    exclude "META-INF/versions/9/module-info.class"
+    from configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
 }
 
 task copyJarToServer(type: Copy) {
     from jar
     into "server/plugins"
-}
-
-processResources {
-    from(sourceSets.main.resources.srcDirs) {
-        filter ReplaceTokens, tokens: [version: version]
-    }
 }
 
 compileKotlin {

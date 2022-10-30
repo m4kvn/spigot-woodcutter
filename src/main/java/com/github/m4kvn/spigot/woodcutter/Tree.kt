@@ -1,4 +1,4 @@
-package com.m4kvn.spigot.woodcutter
+package com.github.m4kvn.spigot.woodcutter
 
 import org.bukkit.Material
 import org.bukkit.block.Block

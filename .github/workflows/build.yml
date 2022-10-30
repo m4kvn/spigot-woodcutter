@@ -1,8 +1,5 @@
-name: Release
-on:
-  push:
-    tags:
-      - '*'
+name: Build
+on: push
 env:
   SPIGOT_VERSION: 1.19
 jobs:
@@ -44,10 +41,3 @@ jobs:
         run: ./gradlew build
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Create Release
-        uses: marvinpinto/action-automatic-releases@latest
-        with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          prerelease: false
-          files: |
-            ./build/libs/*.jar

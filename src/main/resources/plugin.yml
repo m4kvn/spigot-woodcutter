@@ -1,4 +1,4 @@
 name: Woodcutter
 version: @version@
-main: com.m4kvn.spigot.woodcutter.Woodcutter
-api-version: 1.16
+main: com.github.m4kvn.spigot.woodcutter.Woodcutter
+api-version: @api-version@
