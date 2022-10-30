@@ -1,0 +1,25 @@
+Properties properties = new Properties()
+def localPropertiesFile = project.rootProject.file('local.properties')
+if (localPropertiesFile.exists()) {
+    properties.load(localPropertiesFile.newDataInputStream())
+}
+ext {
+    def version_spigot = properties.getProperty('SPIGOT_VERSION') ?: System.getenv('SPIGOT_VERSION')
+    versions = [
+            spigot: "${version_spigot}-R0.1-SNAPSHOT",
+    ]
+    github = [
+            username: properties.getProperty('GITHUB_ACTOR') ?: System.getenv('GITHUB_ACTOR'),
+            password: properties.getProperty('GITHUB_TOKEN') ?: System.getenv('GITHUB_TOKEN'),
+    ]
+    info = [
+            group: 'com.github.m4kvn.spigot',
+            version: properties.getProperty('GITHUB_REF_NAME') ?: System.getenv('GITHUB_REF_NAME')
+    ]
+    deps = [
+            spigot: "org.spigotmc:spigot:${versions.spigot}",
+            log4j: 'org.apache.logging.log4j:log4j-core:2.19.0',
+            snakeyaml: 'org.yaml:snakeyaml:1.33',
+            kotlin: "org.jetbrains.kotlin:kotlin-stdlib-jdk8",
+    ]
+}
