@@ -23,6 +23,8 @@ YouTube (https://youtu.be/uxSWNwvl6MA)
 - ACACIA_LOG
 - CRIMSON_STEM
 - WARPED_STEM
+- MANGROVE_LOG
+- MANGROVE_ROOTS
 
 ## Default Axes
 
@@ -38,7 +40,7 @@ YouTube (https://youtu.be/uxSWNwvl6MA)
 | spigot | woodcutter |
 | :-- | :-- |
 | 1.16.* | [0.0.1](https://github.com/m4kvn/spigot-woodcutter/releases/tag/0.0.1) |
-| 1.19.* | [0.1.5](https://github.com/m4kvn/spigot-woodcutter/releases/tag/0.1.5) |
+| 1.19.* | [0.2.0](https://github.com/m4kvn/spigot-woodcutter/releases/tag/0.2.0) |
 
 ## Download
 
