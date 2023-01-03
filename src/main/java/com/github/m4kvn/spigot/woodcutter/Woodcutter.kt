@@ -11,6 +11,7 @@ import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.event.block.BlockDropItemEvent
+import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.metadata.FixedMetadataValue
 import org.bukkit.plugin.java.JavaPlugin
@@ -67,6 +68,13 @@ class Woodcutter : JavaPlugin(), Listener {
         }
     }
 
+    @EventHandler
+    fun onBlockInteract(event: PlayerInteractEvent) {
+        if (!DEBUG) return
+        val material = event.clickedBlock?.type ?: return
+        event.player.sendMessage("material=$material")
+    }
+
     override fun onEnable() {
         messenger.log("onEnable")
         server.pluginManager.registerEvents(this, this)
@@ -86,12 +94,16 @@ class Woodcutter : JavaPlugin(), Listener {
         get() = when (type) {
             Material.WARPED_STEM,
             Material.CRIMSON_STEM,
+            Material.MANGROVE_ROOTS,
+            Material.MANGROVE_LOG,
             Material.ACACIA_LOG,
             Material.BIRCH_LOG,
             Material.DARK_OAK_LOG,
             Material.JUNGLE_LOG,
             Material.OAK_LOG,
-            Material.SPRUCE_LOG -> true
+            Material.SPRUCE_LOG,
+            -> true
+
             else -> false
         }
 
@@ -102,7 +114,9 @@ class Woodcutter : JavaPlugin(), Listener {
             Material.IRON_AXE,
             Material.NETHERITE_AXE,
             Material.STONE_AXE,
-            Material.WOODEN_AXE -> true
+            Material.WOODEN_AXE,
+            -> true
+
             else -> false
         }
 
@@ -116,6 +130,14 @@ class Woodcutter : JavaPlugin(), Listener {
             Material.ACACIA_LOG -> Tree.AcaciaTree(this)
             Material.CRIMSON_STEM -> Tree.CrimsonStemTree(this)
             Material.WARPED_STEM -> Tree.WarpedStemTree(this)
+            Material.MANGROVE_LOG,
+            Material.MANGROVE_ROOTS,
+            -> Tree.MangroveTree(this)
+
             else -> null
         }
+
+    companion object {
+        private const val DEBUG = false
+    }
 }

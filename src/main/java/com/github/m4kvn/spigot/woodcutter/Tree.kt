@@ -6,7 +6,7 @@ import org.bukkit.block.Block
 sealed class Tree {
     val brokenBlocks: MutableSet<Block> = mutableSetOf()
     abstract val firstBrokenLog: Block
-    abstract val logMaterial: Material
+    abstract val logMaterials: Set<Material>
     abstract val leavesMaterials: Set<Material>
 
     val logBlocks: Set<Block> by lazy {
@@ -18,7 +18,7 @@ sealed class Tree {
             unCheckedBlocks.remove(checkingBlock)
             checkedBlocks.add(checkingBlock)
             val relativeBlocks = checkingBlock.getRelativeBlocks(1)
-                .filter { it.isSameLog(checkingBlock) }
+                .filter { isSameLog(it) }
                 .filterNot { checkedBlocks.contains(it) }
             unCheckedBlocks.addAll(relativeBlocks)
         }
@@ -43,12 +43,13 @@ sealed class Tree {
         return blocks
     }
 
-    private fun Block.isSameLog(block: Block): Boolean =
-        block.blockData.material == blockData.material
+    private fun isSameLog(block: Block): Boolean {
+        return logMaterials.contains(block.blockData.material)
+    }
 
     data class WarpedStemTree(
         override val firstBrokenLog: Block,
-        override val logMaterial: Material = Material.WARPED_STEM,
+        override val logMaterials: Set<Material> = setOf(Material.WARPED_STEM),
         override val leavesMaterials: Set<Material> = setOf(
             Material.WARPED_WART_BLOCK,
             Material.SHROOMLIGHT,
@@ -57,7 +58,7 @@ sealed class Tree {
 
     data class CrimsonStemTree(
         override val firstBrokenLog: Block,
-        override val logMaterial: Material = Material.CRIMSON_STEM,
+        override val logMaterials: Set<Material> = setOf(Material.CRIMSON_STEM),
         override val leavesMaterials: Set<Material> = setOf(
             Material.NETHER_WART_BLOCK,
             Material.SHROOMLIGHT,
@@ -66,37 +67,50 @@ sealed class Tree {
 
     data class AcaciaTree(
         override val firstBrokenLog: Block,
-        override val logMaterial: Material = Material.DARK_OAK_LOG,
+        override val logMaterials: Set<Material> = setOf(Material.DARK_OAK_LOG),
         override val leavesMaterials: Set<Material> = setOf(Material.ACACIA_LEAVES),
     ) : Tree()
 
     data class BirchTree(
         override val firstBrokenLog: Block,
-        override val logMaterial: Material = Material.BIRCH_LOG,
+        override val logMaterials: Set<Material> = setOf(Material.BIRCH_LOG),
         override val leavesMaterials: Set<Material> = setOf(Material.BIRCH_LEAVES),
     ) : Tree()
 
     data class DarkOakTree(
         override val firstBrokenLog: Block,
-        override val logMaterial: Material = Material.DARK_OAK_LOG,
+        override val logMaterials: Set<Material> = setOf(Material.DARK_OAK_LOG),
         override val leavesMaterials: Set<Material> = setOf(Material.DARK_OAK_LEAVES),
     ) : Tree()
 
     data class JungleTree(
         override val firstBrokenLog: Block,
-        override val logMaterial: Material = Material.JUNGLE_LOG,
+        override val logMaterials: Set<Material> = setOf(Material.JUNGLE_LOG),
         override val leavesMaterials: Set<Material> = setOf(Material.JUNGLE_LEAVES),
     ) : Tree()
 
     data class OakTree(
         override val firstBrokenLog: Block,
-        override val logMaterial: Material = Material.OAK_LOG,
+        override val logMaterials: Set<Material> = setOf(Material.OAK_LOG),
         override val leavesMaterials: Set<Material> = setOf(Material.OAK_LEAVES),
     ) : Tree()
 
     data class SpruceTree(
         override val firstBrokenLog: Block,
-        override val logMaterial: Material = Material.SPRUCE_LOG,
+        override val logMaterials: Set<Material> = setOf(Material.SPRUCE_LOG),
         override val leavesMaterials: Set<Material> = setOf(Material.SPRUCE_LEAVES),
+    ) : Tree()
+
+    data class MangroveTree(
+        override val firstBrokenLog: Block,
+        override val logMaterials: Set<Material> = setOf(
+            Material.MANGROVE_LOG,
+            Material.MANGROVE_ROOTS,
+        ),
+        override val leavesMaterials: Set<Material> = setOf(
+            Material.MANGROVE_LEAVES,
+            Material.MANGROVE_PROPAGULE,
+            Material.MOSS_CARPET,
+        ),
     ) : Tree()
 }
